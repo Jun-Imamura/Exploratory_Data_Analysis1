@@ -1,0 +1,16 @@
+fileUrl = "./household_power_consumption.txt"
+houseDat <- read.table(fileUrl, sep=";", header=TRUE)
+houseDat$DateTime <- strptime(paste(houseDat$Date, houseDat$Time), "%d/%m/%Y %H:%M:%S")
+dat <- (houseDat$DateTime >= "2007-02-01" & houseDat$DateTime < "2007-02-03")
+subHouseDat <- houseDat[dat,]
+subHouseDat$Sub_metering_1 <- as.numeric(as.character(subHouseDat$Sub_metering_1))
+subHouseDat$Sub_metering_2 <- as.numeric(as.character(subHouseDat$Sub_metering_2))
+subHouseDat$Sub_metering_3 <- as.numeric(as.character(subHouseDat$Sub_metering_3))
+par(mfrow=c(1,1))
+plot(subHouseDat$DateTime, subHouseDat$Sub_metering_1, type="n", xlab="", ylab="Energy sub metering")
+lines(subHouseDat$DateTime, subHouseDat$Sub_metering_1)
+lines(subHouseDat$DateTime, subHouseDat$Sub_metering_2, col="red")
+lines(subHouseDat$DateTime, subHouseDat$Sub_metering_3, col="blue")
+legend("topright", lty=c(1,1,1),col=c("black", "red", "blue"), legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+dev.copy(png, file="plot3.png")
+dev.off()
